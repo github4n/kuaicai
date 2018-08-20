@@ -1,0 +1,22 @@
+server:
+    context-path: /cp
+    port: 8085
+logging:
+    config: classpath:logback-boot.xml
+spring:
+    mvc:
+        view:
+            prefix: /WEB-INF/jsp/
+            suffix: .jsp
+    http:
+        encoding:
+            charset: UTF-8
+    jackson:
+        date-format: yyyy-MM-dd HH:mm:ss
+        time-zone: GMT+8
+    thymeleaf:
+        cache: false
+datasource:
+        url: jdbc:mysql://119.29.26.226:3307/caipiao?useUnicode=true&characterEncoding=utf8
+        username: root
+        password: tttt1123

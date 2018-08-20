@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<!-- 指定数据连接驱动jar地址 -->
+    <classPathEntry location="E:/repo/mysql/mysql-connector-java/5.1.39/mysql-connector-java-5.1.39.jar"/>
+            
+    <context id="my" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <property name="suppressDate" value="false"/> <!-- 是否生成注释代时间戳-->
+            <property name="suppressAllComments" value="true"/> <!-- 是否取消注释 -->
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://119.29.26.226:3307/caipiao?useSSL=false"
+                        userId="root" password="tttt1123"/>
+
+        <javaModelGenerator targetPackage="com.caipiao.entity" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="static.mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator targetPackage="com.caipiao.mapper" targetProject="src/main/java"  type="XMLMAPPER">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!--<table
+               tableName="t_url_manager"
+               domainObjectName="UrlanagerBean"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"
+               enableInsert="true"
+               selectByPrimaryKeyQueryId="true"
+               enableSelectByPrimaryKey="true"/>
+        <table
+               tableName="t_light"
+               domainObjectName="LightBean"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"
+               enableInsert="true"
+               selectByPrimaryKeyQueryId="true"
+               enableSelectByPrimaryKey="true"/>
+        <table
+               tableName="t_light_infos"
+               domainObjectName="LightInfosBean"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"
+               enableInsert="true"
+               selectByPrimaryKeyQueryId="true"
+               enableSelectByPrimaryKey="true">
+            <columnOverride column="bullet_list" javaType="java.lang.String" jdbcType="VARCHAR" />
+        </table>
+        <table
+               tableName="t_manufacturer"
+               domainObjectName="ManufacturerBean"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"
+               enableInsert="true"
+               selectByPrimaryKeyQueryId="true"
+               enableSelectByPrimaryKey="true"/>
+        <table
+               tableName="ModelBean"
+               domainObjectName="UrlanagerBean"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"
+               enableInsert="true"
+               selectByPrimaryKeyQueryId="true"
+               enableSelectByPrimaryKey="true"/>
+        <table
+               tableName="t_technology"
+               domainObjectName="TechnologyBean"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"
+               enableInsert="true"
+               selectByPrimaryKeyQueryId="true"
+               enableSelectByPrimaryKey="true"/>-->
+       <!-- <table
+               tableName="t_type"
+               domainObjectName="TypeBean"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"
+               enableInsert="true"
+               selectByPrimaryKeyQueryId="true"
+               enableSelectByPrimaryKey="true"/>-->
+        <table
+               tableName="t_kuaicai"
+               domainObjectName="KuaiCai"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"
+               enableInsert="true"
+               selectByPrimaryKeyQueryId="true"
+               enableSelectByPrimaryKey="true"/>
+    </context>
+</generatorConfiguration>
