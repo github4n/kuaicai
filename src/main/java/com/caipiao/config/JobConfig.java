@@ -19,7 +19,7 @@ public class JobConfig {
     @Bean
     public Trigger testQuartzTrigger(){
         SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule()
-                .withIntervalInSeconds(600)  //设置时间周期单位秒
+                .withIntervalInSeconds(60)  //设置时间周期单位秒
                 .repeatForever();
         return TriggerBuilder.newTrigger().forJob(teatQuartzDetail())
                 .withIdentity("openRecordJob")

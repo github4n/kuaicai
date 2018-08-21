@@ -72,12 +72,13 @@ public class KuaiCaiService {
     }
 
     @Transactional
-    public void add(KuaiCai kuaicai){
+    public int add(KuaiCai kuaicai){
         KuaiCai temp = kuaiCaiMapper.selectByExpect(kuaicai.getExpect());
         if(temp == null){
             kuaicai.setOpencodesort(getSortResult(kuaicai.getOpencode()));
-            kuaiCaiMapper.insert(kuaicai);
+            return kuaiCaiMapper.insert(kuaicai);
         }
+        return 0;
     }
 
     public List<KuaiCai> listAll(Boolean today){
@@ -162,6 +163,29 @@ public class KuaiCaiService {
         }
         Collections.sort(list);
         return list.subList(0, top);
+    }
+
+    /**
+     * 当前开出组合遗漏
+     * @param
+     * @author zhangjj
+     * @Date 2018/8/21 15:24
+     * @return
+     * @exception
+     *
+     */
+    public List<OmissionModel> omissionTopByOpen(List<KuaiCai> allRespo, Integer type, String openCode, Boolean today){
+        List<OmissionModel> list = new ArrayList<>();
+        OmissionModel model;
+        List<List<String>> listList = combinationUtil.combinationSelect(openCode.split(","), type);
+        for(List<String> combination : listList){
+            model = new OmissionModel();
+            model.setCombination(String.join(",", combination));
+            model.setOmissionNum(omissionNum(allRespo, combination));
+            list.add(model);
+        }
+        Collections.sort(list);
+        return list;
     }
 
 

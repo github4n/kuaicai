@@ -31,85 +31,6 @@
         </javaClientGenerator>
 
         <!--<table
-               tableName="t_url_manager"
-               domainObjectName="UrlanagerBean"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"
-               enableInsert="true"
-               selectByPrimaryKeyQueryId="true"
-               enableSelectByPrimaryKey="true"/>
-        <table
-               tableName="t_light"
-               domainObjectName="LightBean"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"
-               enableInsert="true"
-               selectByPrimaryKeyQueryId="true"
-               enableSelectByPrimaryKey="true"/>
-        <table
-               tableName="t_light_infos"
-               domainObjectName="LightInfosBean"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"
-               enableInsert="true"
-               selectByPrimaryKeyQueryId="true"
-               enableSelectByPrimaryKey="true">
-            <columnOverride column="bullet_list" javaType="java.lang.String" jdbcType="VARCHAR" />
-        </table>
-        <table
-               tableName="t_manufacturer"
-               domainObjectName="ManufacturerBean"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"
-               enableInsert="true"
-               selectByPrimaryKeyQueryId="true"
-               enableSelectByPrimaryKey="true"/>
-        <table
-               tableName="ModelBean"
-               domainObjectName="UrlanagerBean"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"
-               enableInsert="true"
-               selectByPrimaryKeyQueryId="true"
-               enableSelectByPrimaryKey="true"/>
-        <table
-               tableName="t_technology"
-               domainObjectName="TechnologyBean"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"
-               enableInsert="true"
-               selectByPrimaryKeyQueryId="true"
-               enableSelectByPrimaryKey="true"/>-->
-       <!-- <table
-               tableName="t_type"
-               domainObjectName="TypeBean"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"
-               enableInsert="true"
-               selectByPrimaryKeyQueryId="true"
-               enableSelectByPrimaryKey="true"/>-->
-        <table
                tableName="t_kuaicai"
                domainObjectName="KuaiCai"
                enableCountByExample="false"
@@ -119,6 +40,30 @@
                selectByExampleQueryId="false"
                enableInsert="true"
                selectByPrimaryKeyQueryId="true"
-               enableSelectByPrimaryKey="true"/>
+               enableSelectByPrimaryKey="true"/>-->
+
+        <!--<table
+                tableName="t_programme"
+                domainObjectName="Programme"
+                enableCountByExample="false"
+                enableUpdateByExample="false"
+                enableDeleteByExample="false"
+                enableSelectByExample="false"
+                selectByExampleQueryId="false"
+                enableInsert="true"
+                selectByPrimaryKeyQueryId="true"
+                enableSelectByPrimaryKey="true"/>-->
+
+        <table
+                tableName="t_plan"
+                domainObjectName="Plan"
+                enableCountByExample="false"
+                enableUpdateByExample="false"
+                enableDeleteByExample="false"
+                enableSelectByExample="false"
+                selectByExampleQueryId="false"
+                enableInsert="true"
+                selectByPrimaryKeyQueryId="true"
+                enableSelectByPrimaryKey="true"/>
     </context>
 </generatorConfiguration>

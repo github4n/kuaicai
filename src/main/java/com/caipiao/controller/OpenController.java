@@ -51,6 +51,7 @@ public class OpenController {
         result.put("type", String.format("广东11选%d统计遗漏, today=true表示只统计今天的", type));
         result.put("top", String.format("获取前%d名", top));
         result.put("list", omissionTop);
+        result.put("lastExpect", allRespo.get(0));
         return ResponseEntity.ok(result);
     }
 
