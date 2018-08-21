@@ -1,6 +1,9 @@
 package com.caipiao.mapper;
 
 import com.caipiao.entity.KuaiCai;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface KuaiCaiMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +17,8 @@ public interface KuaiCaiMapper {
     int updateByPrimaryKeySelective(KuaiCai record);
 
     int updateByPrimaryKey(KuaiCai record);
+
+    KuaiCai selectByExpect(String expect);
+
+    List<KuaiCai> selectAll(@Param("todayStr") String todayStr);
 }

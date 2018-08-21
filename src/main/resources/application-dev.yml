@@ -1,5 +1,4 @@
 server:
-    context-path: /cp
     port: 8085
 logging:
     config: classpath:logback-boot.xml
@@ -17,6 +16,9 @@ spring:
     thymeleaf:
         cache: false
 datasource:
-        url: jdbc:mysql://119.29.26.226:3307/caipiao?useUnicode=true&characterEncoding=utf8
-        username: root
-        password: tttt1123
+    url: jdbc:mysql://127.0.0.1:3307/caipiao?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: tttt1123
+props:
+    gd11x5Url: http://f.apiplus.net/gd11x5-20.json
+

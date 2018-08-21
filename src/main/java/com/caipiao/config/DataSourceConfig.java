@@ -27,6 +27,7 @@ public class DataSourceConfig {
     static final String PACKAGE = "com.caipiao.mapper";
     static final String MAPPER_LOCATION = "classpath:static/mapper/*.xml";
 
+
     @Primary
     @Bean(name = "dataSource")
     @ConfigurationProperties(prefix="datasource")

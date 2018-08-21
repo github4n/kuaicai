@@ -26,8 +26,19 @@
       from t_kuaicai
       where expect = #{expect,jdbcType=VARCHAR}
     </select>
+  <select id="selectAll" resultType="com.caipiao.entity.KuaiCai">
+    select
+    <include refid="Base_Column_List" />
+    from t_kuaicai
+    <where>
+      <if test="todayStr != null">
+        opentime like "%"#{todayStr}"%"
+      </if>
+    </where>
+    order by expect desc
+  </select>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_kuaicai
     where id = #{id,jdbcType=INTEGER}
   </delete>

@@ -1,6 +1,6 @@
 package com.caipiao.entity;
 
-public class KuaiCai {
+public class KuaiCai implements Comparable<KuaiCai>{
     private Integer id;
 
     private String expect;
@@ -69,5 +69,11 @@ public class KuaiCai {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    @Override
+    public int compareTo(KuaiCai o) {
+
+        return o.getExpect().compareTo(expect);
     }
 }
