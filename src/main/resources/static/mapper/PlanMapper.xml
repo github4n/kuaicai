@@ -35,6 +35,12 @@
     from t_plan
     where programmeID = #{programmeID,jdbcType=INTEGER} and state = 0 order by id asc limit 0, 1
   </select>
+  <select id="findEndPlan" resultType="com.caipiao.entity.Plan">
+    select
+    <include refid="Base_Column_List" />
+    from t_plan
+    where programmeID = #{programmeID,jdbcType=INTEGER} order by id desc limit 0, 1
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from t_plan
     where id = #{id,jdbcType=INTEGER}
@@ -45,7 +51,7 @@
       parent, planno, state)
     values (#{id,jdbcType=INTEGER}, #{programmeid,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, 
       #{totalamount,jdbcType=INTEGER}, #{openamount,jdbcType=INTEGER}, #{profit,jdbcType=INTEGER}, 
-      #{parent,jdbcType=INTEGER}, #{planno,jdbcType=INTEGER}, , #{state,jdbcType=INTEGER})
+      #{parent,jdbcType=INTEGER}, #{planno,jdbcType=INTEGER}, #{state,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.caipiao.entity.Plan">
     insert into t_plan

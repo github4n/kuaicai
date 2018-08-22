@@ -16,7 +16,7 @@ spring:
     thymeleaf:
         cache: false
 datasource:
-    url: jdbc:mysql://119.29.26.226:3307/caipiao?useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://127.0.0.1:3307/caipiao?useUnicode=true&characterEncoding=utf8
     username: root
     password: tttt1123
 props:

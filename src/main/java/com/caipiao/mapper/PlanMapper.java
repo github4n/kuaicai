@@ -20,4 +20,6 @@ public interface PlanMapper {
     List<Plan> findByProgramme(Integer programmeID);
 
     Plan findLastPlan(Integer programmeID);
+
+    Plan findEndPlan(Integer programmeID);
 }
