@@ -157,7 +157,7 @@
       totalAmount = #{totalamount,jdbcType=INTEGER},
       openAmount = #{openamount,jdbcType=INTEGER},
       profit = #{profit,jdbcType=INTEGER},
-      state = #{profit,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER},
       parent = #{parent,jdbcType=INTEGER},
       planno = #{planno,jdbcType=INTEGER},
       expect = #{expect,jdbcType=VARCHAR},
