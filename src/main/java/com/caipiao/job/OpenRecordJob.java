@@ -65,8 +65,8 @@ public class OpenRecordJob extends QuartzJobBean {
             List<KuaiCai> data = cpDataModel.getData();
             for(KuaiCai kuaiCai : data){
                 int row = kuaiCaiService.add(kuaiCai);
-                System.out.println(row);
                 if(row > 0){//触发追号策略
+                    log.info("新开号：{}", JSON.toJSONString(kuaiCai, true));
                     createStrategy(kuaiCai);//生成新策略
 
                     adjust(kuaiCai);//计算旧策略
@@ -81,9 +81,10 @@ public class OpenRecordJob extends QuartzJobBean {
         //生成新策略
         List<OmissionModel> omissionModels = kuaiCaiService.omissionTop(kuaiCaiService.listAll(false), 3, 10, false);
         for(OmissionModel omissionModel : omissionModels){
-            if(omissionModel.getOmissionNum() > 120){
+            if(omissionModel.getOmissionNum() > 110){
                 Programme programme = programmeMapper.find(omissionModel.getCombination());
                 if(programme == null){//还未加入计划
+                    log.info("有新预期遗漏号：{}", JSON.toJSONString(omissionModel, true));
                     Programme pp = new Programme();
                     pp.setChasecode(omissionModel.getCombination());
                     pp.setChasestart(omissionModel.getOmissionNum());
@@ -99,6 +100,7 @@ public class OpenRecordJob extends QuartzJobBean {
                         plan = playStrategy.nextStep(plan);
                         planMapper.insert(plan);
                     }
+                    log.info("新增追号策略：{}", JSON.toJSONString(pp, true));
                 }
             }
         }
@@ -109,27 +111,28 @@ public class OpenRecordJob extends QuartzJobBean {
         List<Programme> programmes = programmeMapper.findAll();//所在进行中的策略
         for(Programme pro : programmes){
             String[] codes = pro.getChasecode().split(",");
-            List<Plan> plans = planMapper.findByProgramme(pro.getId());
-            Plan nextPlan = planMapper.findNextPlan(pro.getId());
+            Plan lastPlan = planMapper.findLastPlan(pro.getId());//最后一步
             if(contains(kuaiCai.getOpencode(), Arrays.asList(codes))){//开出
-                nextPlan.setExpect(kuaiCai.getExpect());
-                nextPlan.setState(1);
-                nextPlan.setOpencode(kuaiCai.getOpencode());
-                planMapper.updateByPrimaryKey(nextPlan);
+                log.info("追号开出：{}", JSON.toJSONString(kuaiCai, true));
+                lastPlan.setExpect(kuaiCai.getExpect());
+                lastPlan.setState(1);
+                lastPlan.setOpencode(kuaiCai.getOpencode());
+                planMapper.updateByPrimaryKey(lastPlan);
 
                 pro.setState(1);
-                pro.setProfit(nextPlan.getOpenamount() - nextPlan.getTotalamount());
+                pro.setProfit(lastPlan.getOpenamount() - lastPlan.getTotalamount());
                 programmeMapper.updateByPrimaryKey(pro);
             }else{//未开出
-                if(nextPlan == null){//止损
+                if(lastPlan == null){//止损
                     pro.setState(2);
-                    pro.setProfit(nextPlan.getTotalamount());
+                    pro.setProfit(lastPlan.getTotalamount());
+                    log.info("止损：{}", JSON.toJSONString(pro, true));
                     programmeMapper.updateByPrimaryKey(pro);
-                }else{//生成下一步计划
-                    nextPlan.setExpect(kuaiCai.getExpect());
-                    nextPlan.setState(1);
-                    nextPlan.setOpencode(kuaiCai.getOpencode());
-                    planMapper.updateByPrimaryKey(nextPlan);
+                }else{//更新计划
+                    lastPlan.setExpect(kuaiCai.getExpect());
+                    lastPlan.setState(1);
+                    lastPlan.setOpencode(kuaiCai.getOpencode());
+                    planMapper.updateByPrimaryKey(lastPlan);
                 }
             }
         }

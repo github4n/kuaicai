@@ -29,7 +29,7 @@
       from t_plan
       where programmeID = #{programmeID,jdbcType=INTEGER} order by id asc
     </select>
-  <select id="findNextPlan" resultType="com.caipiao.entity.Plan">
+  <select id="findLastPlan" resultType="com.caipiao.entity.Plan">
     select
     <include refid="Base_Column_List" />
     from t_plan

@@ -19,5 +19,5 @@ public interface PlanMapper {
 
     List<Plan> findByProgramme(Integer programmeID);
 
-    Plan findNextPlan(Integer programmeID);
+    Plan findLastPlan(Integer programmeID);
 }
