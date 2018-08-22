@@ -81,9 +81,13 @@ public class OpenRecordJob extends QuartzJobBean {
                                 pp.setState(0);
                                 pp.setStoploss(20);
                                 pp.setType(3);
-                                int rows = programmeMapper.insert(pp);
+                                programmeMapper.insert(pp);
 
-                                planMapper.insert(playStrategy.nextStep(Plan.getPre(pp.getId())));
+                                Plan plan = Plan.getPre(pp.getId());
+                                for(int i =0; i < pp.getStoploss(); ++i){
+                                    plan = playStrategy.nextStep(plan);
+                                    planMapper.insert(plan);
+                                }
                             }
                         }
                     }
@@ -93,19 +97,26 @@ public class OpenRecordJob extends QuartzJobBean {
                     for(Programme pro : programmes){
                         String[] codes = pro.getChasecode().split(",");
                         List<Plan> plans = planMapper.findByProgramme(pro.getId());
-                        Plan lastPlan = plans.get(plans.size() - 1);
+                        Plan nextPlan = planMapper.findNextPlan(pro.getId());
                         if(contains(kuaiCai.getOpencode(), Arrays.asList(codes))){//开出
+                            nextPlan.setExpect(kuaiCai.getExpect());
+                            nextPlan.setState(1);
+                            nextPlan.setOpencode(kuaiCai.getOpencode());
+                            planMapper.updateByPrimaryKey(nextPlan);
+
                             pro.setState(1);
-                            pro.setProfit(lastPlan.getOpenamount() - lastPlan.getTotalamount());
+                            pro.setProfit(nextPlan.getOpenamount() - nextPlan.getTotalamount());
                             programmeMapper.updateByPrimaryKey(pro);
                         }else{//未开出
-                            if(plans.size() >= pro.getStoploss()){//止损
+                            if(nextPlan == null){//止损
                                 pro.setState(2);
-                                pro.setProfit(lastPlan.getTotalamount());
+                                pro.setProfit(nextPlan.getTotalamount());
                                 programmeMapper.updateByPrimaryKey(pro);
                             }else{//生成下一步计划
-                                IStrategy playStrategy = new ConservativeStrategy();
-                                planMapper.insert(playStrategy.nextStep(lastPlan));
+                                nextPlan.setExpect(kuaiCai.getExpect());
+                                nextPlan.setState(1);
+                                nextPlan.setOpencode(kuaiCai.getOpencode());
+                                planMapper.updateByPrimaryKey(nextPlan);
                             }
                         }
                     }

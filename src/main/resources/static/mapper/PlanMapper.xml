@@ -9,10 +9,13 @@
     <result column="openAmount" jdbcType="INTEGER" property="openamount" />
     <result column="profit" jdbcType="INTEGER" property="profit" />
     <result column="parent" jdbcType="INTEGER" property="parent" />
+    <result column="state" jdbcType="INTEGER" property="state" />
     <result column="planno" jdbcType="INTEGER" property="planno" />
+    <result column="expect" property="expect" jdbcType="VARCHAR" />
+    <result column="opencode" property="opencode" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, programmeID, amount, totalAmount, openAmount, profit, parent, planno
+    id, programmeID, amount, totalAmount, openAmount, profit, parent, planno, expect, opencode, state
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 'true' as QUERYID,
@@ -24,19 +27,25 @@
       select
       <include refid="Base_Column_List" />
       from t_plan
-      where programmeID = #{programmeID,jdbcType=INTEGER}
+      where programmeID = #{programmeID,jdbcType=INTEGER} order by id asc
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <select id="findNextPlan" resultType="com.caipiao.entity.Plan">
+    select
+    <include refid="Base_Column_List" />
+    from t_plan
+    where programmeID = #{programmeID,jdbcType=INTEGER} and state = 0 order by id asc limit 0, 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from t_plan
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.caipiao.entity.Plan">
     insert into t_plan (id, programmeID, amount, 
       totalAmount, openAmount, profit, 
-      parent, planno)
+      parent, planno, state)
     values (#{id,jdbcType=INTEGER}, #{programmeid,jdbcType=INTEGER}, #{amount,jdbcType=INTEGER}, 
       #{totalamount,jdbcType=INTEGER}, #{openamount,jdbcType=INTEGER}, #{profit,jdbcType=INTEGER}, 
-      #{parent,jdbcType=INTEGER}, #{planno,jdbcType=INTEGER})
+      #{parent,jdbcType=INTEGER}, #{planno,jdbcType=INTEGER}, , #{state,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.caipiao.entity.Plan">
     insert into t_plan
@@ -65,6 +74,9 @@
       <if test="planno != null">
         planno,
       </if>
+      <if test="state != null">
+        state,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -90,6 +102,9 @@
       </if>
       <if test="planno != null">
         #{planno,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -117,6 +132,15 @@
       <if test="planno != null">
         planno = #{planno,jdbcType=INTEGER},
       </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="expect != null" >
+        expect = #{expect,jdbcType=VARCHAR},
+      </if>
+      <if test="opencode != null" >
+        opencode = #{opencode,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -127,8 +151,11 @@
       totalAmount = #{totalamount,jdbcType=INTEGER},
       openAmount = #{openamount,jdbcType=INTEGER},
       profit = #{profit,jdbcType=INTEGER},
+      state = #{profit,jdbcType=INTEGER},
       parent = #{parent,jdbcType=INTEGER},
-      planno = #{planno,jdbcType=INTEGER}
+      planno = #{planno,jdbcType=INTEGER},
+      expect = #{expect,jdbcType=VARCHAR},
+      opencode = #{opencode,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -18,4 +18,6 @@ public interface PlanMapper {
     int updateByPrimaryKey(Plan record);
 
     List<Plan> findByProgramme(Integer programmeID);
+
+    Plan findNextPlan(Integer programmeID);
 }

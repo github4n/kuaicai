@@ -27,7 +27,7 @@ public class Programme {
     private Integer profit;
 
     /** 计划表 */
-    private List<Plan1> planList;
+    private List<Plan> planList;
 
     public Integer getId() {
         return id;
