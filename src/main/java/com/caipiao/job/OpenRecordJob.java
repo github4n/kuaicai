@@ -9,16 +9,13 @@ import com.caipiao.entity.Programme;
 import com.caipiao.mapper.KuaiCaiMapper;
 import com.caipiao.mapper.PlanMapper;
 import com.caipiao.mapper.ProgrammeMapper;
-import com.caipiao.math.combinationUtil;
 import com.caipiao.model.CPDataModel;
 import com.caipiao.model.OmissionModel;
 import com.caipiao.service.KuaiCaiService;
-import com.caipiao.strategy.ConservativeStrategy;
 import com.caipiao.strategy.IStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.web.client.RestClientException;
@@ -26,7 +23,6 @@ import org.springframework.web.client.RestOperations;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -74,8 +70,8 @@ public class OpenRecordJob extends QuartzJobBean {
                     createStrategy(kuaiCai);//生成新策略
 
                     adjust(kuaiCai);//计算旧策略
+                    kuaiCaiService.add(kuaiCai);
                 }
-                kuaiCaiService.add(kuaiCai);
             }
         } catch (RestClientException e) {
             e.printStackTrace();
