@@ -73,12 +73,8 @@ public class KuaiCaiService {
 
     @Transactional
     public int add(KuaiCai kuaicai){
-        KuaiCai temp = kuaiCaiMapper.selectByExpect(kuaicai.getExpect());
-        if(temp == null){
-            kuaicai.setOpencodesort(getSortResult(kuaicai.getOpencode()));
-            return kuaiCaiMapper.insert(kuaicai);
-        }
-        return 0;
+        kuaicai.setOpencodesort(getSortResult(kuaicai.getOpencode()));
+        return kuaiCaiMapper.insert(kuaicai);
     }
 
     public List<KuaiCai> listAll(Boolean today){

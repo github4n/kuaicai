@@ -6,6 +6,7 @@ import com.caipiao.contants.ConfigProperties;
 import com.caipiao.entity.KuaiCai;
 import com.caipiao.entity.Plan;
 import com.caipiao.entity.Programme;
+import com.caipiao.mapper.KuaiCaiMapper;
 import com.caipiao.mapper.PlanMapper;
 import com.caipiao.mapper.ProgrammeMapper;
 import com.caipiao.math.combinationUtil;
@@ -50,6 +51,9 @@ public class OpenRecordJob extends QuartzJobBean {
     @Resource
     private PlanMapper planMapper;
 
+    @Resource
+    private KuaiCaiMapper kuaiCaiMapper;
+
     @Resource(name="radicalStrategy")
     private IStrategy playStrategy;
 
@@ -64,13 +68,14 @@ public class OpenRecordJob extends QuartzJobBean {
 
             List<KuaiCai> data = cpDataModel.getData();
             for(KuaiCai kuaiCai : data){
-                int row = kuaiCaiService.add(kuaiCai);
-                if(row > 0){//触发追号策略
+                KuaiCai temp = kuaiCaiMapper.selectByExpect(kuaiCai.getExpect());
+                if(temp == null){
                     log.info("新开号：{}", JSON.toJSONString(kuaiCai, true));
                     createStrategy(kuaiCai);//生成新策略
 
                     adjust(kuaiCai);//计算旧策略
                 }
+                kuaiCaiService.add(kuaiCai);
             }
         } catch (RestClientException e) {
             e.printStackTrace();
@@ -108,7 +113,7 @@ public class OpenRecordJob extends QuartzJobBean {
 
     private void adjust(KuaiCai kuaiCai){
         //计算旧策略
-        List<Programme> programmes = programmeMapper.findAll();//所在进行中的策略
+        List<Programme> programmes = programmeMapper.findAll();//所有进行中的策略
         for(Programme pro : programmes){
             String[] codes = pro.getChasecode().split(",");
             Plan lastPlan = planMapper.findLastPlan(pro.getId());//当前一步
@@ -126,7 +131,7 @@ public class OpenRecordJob extends QuartzJobBean {
                 if(lastPlan == null){//止损
                     Plan endPlan = planMapper.findEndPlan(pro.getId());//最后一步计划
                     pro.setState(2);
-                    pro.setProfit(endPlan.getTotalamount());
+                    pro.setProfit(0 - endPlan.getTotalamount());
                     log.info("止损：{}", JSON.toJSONString(pro, true));
                     programmeMapper.updateByPrimaryKey(pro);
                 }else{//更新计划
