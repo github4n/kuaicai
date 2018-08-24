@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.caipiao.mapper.OmissionPeakMapper" >
+  <resultMap id="BaseResultMap" type="com.caipiao.entity.OmissionPeak" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="omissionCode" property="omissioncode" jdbcType="VARCHAR" />
+    <result column="startExpect" property="startexpect" jdbcType="VARCHAR" />
+    <result column="openExpect" property="openExpect" jdbcType="VARCHAR" />
+    <result column="startOmissionNum" property="startomissionnum" jdbcType="INTEGER" />
+    <result column="currentOmissionNum" property="currentomissionnum" jdbcType="INTEGER" />
+    <result column="updateTime" property="updatetime" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, omissionCode, startExpect, startOmissionNum, currentOmissionNum, updateTime, 
+    state, type, openExpect
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from t_omissionpeak
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="find" resultType="com.caipiao.entity.OmissionPeak">
+      select 'true' as QUERYID,
+      <include refid="Base_Column_List" />
+      from t_omissionpeak
+      where omissionCode = #{combination,jdbcType=VARCHAR} and state = #{state,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_omissionpeak
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.caipiao.entity.OmissionPeak" >
+    insert into t_omissionpeak (id, omissionCode, startExpect, 
+      startOmissionNum, currentOmissionNum, updateTime, 
+      state, type, openExpect)
+    values (#{id,jdbcType=INTEGER}, #{omissioncode,jdbcType=VARCHAR}, #{startexpect,jdbcType=VARCHAR}, 
+      #{startomissionnum,jdbcType=INTEGER}, #{currentomissionnum,jdbcType=INTEGER}, #{updatetime,jdbcType=VARCHAR}, 
+      #{state,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{openExpect,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.caipiao.entity.OmissionPeak" >
+    insert into t_omissionpeak
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="omissioncode != null" >
+        omissionCode,
+      </if>
+      <if test="startexpect != null" >
+        startExpect,
+      </if>
+      <if test="openExpect != null" >
+        openExpect,
+      </if>
+      <if test="startomissionnum != null" >
+        startOmissionNum,
+      </if>
+      <if test="currentomissionnum != null" >
+        currentOmissionNum,
+      </if>
+      <if test="updatetime != null" >
+        updateTime,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="omissioncode != null" >
+        #{omissioncode,jdbcType=VARCHAR},
+      </if>
+      <if test="startexpect != null" >
+        #{startexpect,jdbcType=VARCHAR},
+      </if>
+      <if test="openExpect != null" >
+        #{openExpect,jdbcType=VARCHAR},
+      </if>
+      <if test="startomissionnum != null" >
+        #{startomissionnum,jdbcType=INTEGER},
+      </if>
+      <if test="currentomissionnum != null" >
+        #{currentomissionnum,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.caipiao.entity.OmissionPeak" >
+    update t_omissionpeak
+    <set >
+      <if test="omissioncode != null" >
+        omissionCode = #{omissioncode,jdbcType=VARCHAR},
+      </if>
+      <if test="startexpect != null" >
+        startExpect = #{startexpect,jdbcType=VARCHAR},
+      </if>
+      <if test="openExpect != null" >
+        openExpect = #{openExpect,jdbcType=VARCHAR},
+      </if>
+      <if test="startomissionnum != null" >
+        startOmissionNum = #{startomissionnum,jdbcType=INTEGER},
+      </if>
+      <if test="currentomissionnum != null" >
+        currentOmissionNum = #{currentomissionnum,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null" >
+        updateTime = #{updatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.caipiao.entity.OmissionPeak" >
+    update t_omissionpeak
+    set omissionCode = #{omissioncode,jdbcType=VARCHAR},
+      startExpect = #{startexpect,jdbcType=VARCHAR},
+      openExpect = #{openExpect,jdbcType=VARCHAR},
+      startOmissionNum = #{startomissionnum,jdbcType=INTEGER},
+      currentOmissionNum = #{currentomissionnum,jdbcType=INTEGER},
+      updateTime = #{updatetime,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

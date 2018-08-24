@@ -4,15 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.caipiao.contants.ConfigProperties;
 import com.caipiao.entity.KuaiCai;
+import com.caipiao.entity.OmissionPeak;
 import com.caipiao.entity.Plan;
 import com.caipiao.entity.Programme;
 import com.caipiao.mapper.KuaiCaiMapper;
+import com.caipiao.mapper.OmissionPeakMapper;
 import com.caipiao.mapper.PlanMapper;
 import com.caipiao.mapper.ProgrammeMapper;
 import com.caipiao.model.CPDataModel;
 import com.caipiao.model.OmissionModel;
 import com.caipiao.service.KuaiCaiService;
 import com.caipiao.strategy.IStrategy;
+import com.caipiao.util.DateTimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -50,6 +53,9 @@ public class OpenRecordJob extends QuartzJobBean {
     @Resource
     private KuaiCaiMapper kuaiCaiMapper;
 
+    @Resource
+    private OmissionPeakMapper omissionPeakMapper;
+
     @Resource(name="radicalStrategy")
     private IStrategy playStrategy;
 
@@ -67,9 +73,12 @@ public class OpenRecordJob extends QuartzJobBean {
                 KuaiCai temp = kuaiCaiMapper.selectByExpect(kuaiCai.getExpect());
                 if(temp == null){
                     log.info("新开号：{}", JSON.toJSONString(kuaiCai, true));
-                    createStrategy(kuaiCai);//生成新策略
+                    calcuOmissionPeak(kuaiCai, 3, 100);
+                    calcuOmissionPeak(kuaiCai, 4, 400);
+                    createStrategy(kuaiCai, 3, 100);//生成新策略
 
                     adjust(kuaiCai);//计算旧策略
+
                     kuaiCaiService.add(kuaiCai);
                 }
             }
@@ -78,13 +87,60 @@ public class OpenRecordJob extends QuartzJobBean {
         }
     }
 
-    private void createStrategy(KuaiCai kuaiCai){
-        //生成新策略
-        List<OmissionModel> omissionModels = kuaiCaiService.omissionTop(kuaiCaiService.listAll(false), 3, 10, false);
+    /**
+     * 计算峰值
+     * @param
+     * @author zhangjj
+     * @Date 2018/8/24 10:40
+     * @return
+     * @exception
+     *
+     */
+    private void calcuOmissionPeak(KuaiCai kuaiCai, Integer type, Integer obPoint){
+        List<OmissionModel> omissionModels = kuaiCaiService.
+                omissionTop(kuaiCaiService.listAll(false), type, 10, false);
+        if(omissionModels == null || omissionModels.isEmpty()) return ;
         for(OmissionModel omissionModel : omissionModels){
-            if(omissionModel.getOmissionNum() > 100){
+            if(omissionModel.getOmissionNum() > obPoint){
+                OmissionPeak omissionPeak = omissionPeakMapper.find(omissionModel.getCombination(), 0);
+                if(omissionPeak == null &&
+                        !contains(kuaiCai.getOpencode(),
+                                Arrays.asList(omissionPeak.getOmissioncode().split(",")))){//未记录，并且当期未开出
+                    OmissionPeak op = new OmissionPeak();
+                    op.setCurrentomissionnum(omissionModel.getOmissionNum());
+                    op.setOmissioncode(omissionModel.getCombination());
+                    op.setStartexpect(kuaiCai.getExpect());
+                    op.setStartomissionnum(omissionModel.getOmissionNum());
+                    op.setState(0);
+                    op.setType(type);
+                    op.setUpdatetime(DateTimeUtil.currentDateTime());
+                    omissionPeakMapper.insert(op);
+                }else{
+                    if(contains(kuaiCai.getOpencode(), Arrays.asList(omissionPeak.getOmissioncode().split(",")))){//开出
+                        omissionPeak.setUpdatetime(DateTimeUtil.currentDateTime());
+                        omissionPeak.setOpenExpect(kuaiCai.getExpect());
+                        omissionPeak.setState(1);
+                        omissionPeakMapper.updateByPrimaryKey(omissionPeak);
+                    }else{//未开出
+                        omissionPeak.setCurrentomissionnum(omissionPeak.getCurrentomissionnum() + 1);
+                        omissionPeak.setUpdatetime(DateTimeUtil.currentDateTime());
+                        omissionPeakMapper.updateByPrimaryKey(omissionPeak);
+                    }
+                }
+            }
+        }
+    }
+
+    private void createStrategy(KuaiCai kuaiCai, Integer type, Integer obPoint){
+        List<OmissionModel> omissionModels = kuaiCaiService.
+                omissionTop(kuaiCaiService.listAll(false), type, 10, false);
+        //生成新策略
+        for(OmissionModel omissionModel : omissionModels){
+            if(omissionModel.getOmissionNum() > obPoint){
                 Programme programme = programmeMapper.find(omissionModel.getCombination());
-                if(programme == null){//还未加入计划
+                if(programme == null &&
+                        !contains(kuaiCai.getOpencode(),
+                                Arrays.asList(omissionModel.getCombination().split(",")))){//还未加入计划并且当期未开出
                     log.info("有新预期遗漏号：{}", JSON.toJSONString(omissionModel, true));
                     Programme pp = new Programme();
                     pp.setChasecode(omissionModel.getCombination());
@@ -93,7 +149,7 @@ public class OpenRecordJob extends QuartzJobBean {
                     pp.setProfit(0);
                     pp.setState(0);
                     pp.setStoploss(10);
-                    pp.setType(3);
+                    pp.setType(type);
                     programmeMapper.insert(pp);
 
                     Plan plan = Plan.getPre(pp.getId());

@@ -54,9 +54,22 @@
                 selectByPrimaryKeyQueryId="true"
                 enableSelectByPrimaryKey="true"/>-->
 
-        <table
+        <!--<table
                 tableName="t_plan"
                 domainObjectName="Plan"
+                enableCountByExample="false"
+                enableUpdateByExample="false"
+                enableDeleteByExample="false"
+                enableSelectByExample="false"
+                selectByExampleQueryId="false"
+                enableInsert="true"
+                selectByPrimaryKeyQueryId="true"
+                enableSelectByPrimaryKey="true"/>-->
+
+
+        <table
+                tableName="t_omissionpeak"
+                domainObjectName="OmissionPeak"
                 enableCountByExample="false"
                 enableUpdateByExample="false"
                 enableDeleteByExample="false"
