@@ -105,7 +105,7 @@ public class OpenRecordJob extends QuartzJobBean {
                 OmissionPeak omissionPeak = omissionPeakMapper.find(omissionModel.getCombination(), 0);
                 if(omissionPeak == null &&
                         !contains(kuaiCai.getOpencode(),
-                                Arrays.asList(omissionPeak.getOmissioncode().split(",")))){//未记录，并且当期未开出
+                                Arrays.asList(omissionModel.getCombination().split(",")))){//未记录，并且当期未开出
                     OmissionPeak op = new OmissionPeak();
                     op.setCurrentomissionnum(omissionModel.getOmissionNum());
                     op.setOmissioncode(omissionModel.getCombination());
