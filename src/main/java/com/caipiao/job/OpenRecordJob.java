@@ -102,12 +102,14 @@ public class OpenRecordJob extends QuartzJobBean {
         if(omissionModels == null || omissionModels.isEmpty()) return ;
         for(OmissionModel omissionModel : omissionModels){
             if(omissionModel.getOmissionNum() > obPoint){
+                log.info("{} : 符合条件的峰值，任{}, 大于观察值{}", omissionModel.getCombination(), type, obPoint);
                 OmissionPeak omissionPeak = omissionPeakMapper.find(omissionModel.getCombination(), 0);
                 if(omissionPeak == null &&
                         !contains(kuaiCai.getOpencode(),
                                 Arrays.asList(omissionModel.getCombination().split(",")))){//未记录，并且当期未开出
+                    log.info("组合{}，新加入", omissionModel.getCombination());
                     OmissionPeak op = new OmissionPeak();
-                    op.setCurrentomissionnum(omissionModel.getOmissionNum());
+                    op.setCurrentomissionnum(omissionModel.getOmissionNum() + 1);//+1为加上本次开出未中
                     op.setOmissioncode(omissionModel.getCombination());
                     op.setStartexpect(kuaiCai.getExpect());
                     op.setStartomissionnum(omissionModel.getOmissionNum());
@@ -116,12 +118,16 @@ public class OpenRecordJob extends QuartzJobBean {
                     op.setUpdatetime(DateTimeUtil.currentDateTime());
                     omissionPeakMapper.insert(op);
                 }else{
+                    log.info("更新组合{}，观察情况", omissionModel.getCombination());
                     if(contains(kuaiCai.getOpencode(), Arrays.asList(omissionPeak.getOmissioncode().split(",")))){//开出
+                        log.info("观察的组合{}，已经在第{}期开出，开出号为{}",
+                                omissionModel.getCombination(), kuaiCai.getExpect(), kuaiCai.getOpencode());
                         omissionPeak.setUpdatetime(DateTimeUtil.currentDateTime());
                         omissionPeak.setOpenExpect(kuaiCai.getExpect());
                         omissionPeak.setState(1);
                         omissionPeakMapper.updateByPrimaryKey(omissionPeak);
                     }else{//未开出
+                        log.info("更新组合{}，未开出", omissionModel.getCombination());
                         omissionPeak.setCurrentomissionnum(omissionPeak.getCurrentomissionnum() + 1);
                         omissionPeak.setUpdatetime(DateTimeUtil.currentDateTime());
                         omissionPeakMapper.updateByPrimaryKey(omissionPeak);
