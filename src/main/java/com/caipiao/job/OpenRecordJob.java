@@ -17,8 +17,10 @@ import com.caipiao.service.KuaiCaiService;
 import com.caipiao.strategy.IStrategy;
 import com.caipiao.util.DateTimeUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.PersistJobDataAfterExecution;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.web.client.RestClientException;
@@ -33,6 +35,8 @@ import java.util.List;
  * @create 2018-08-13 11:52
  **/
 @Slf4j
+@DisallowConcurrentExecution
+@PersistJobDataAfterExecution
 public class OpenRecordJob extends QuartzJobBean {
 
     @Resource
@@ -64,6 +68,7 @@ public class OpenRecordJob extends QuartzJobBean {
         log.info("开始抓取。。。");
         try {
             ResponseEntity<String> entity = restOperations.getForEntity(configProperties.getGd11x5Url(), String.class);
+            log.info("body -------> " + entity.getBody());
             CPDataModel cpDataModel = JSONObject.parseObject(entity.getBody(), CPDataModel.class);
 
             log.info(JSON.toJSONString(cpDataModel, true));
@@ -76,6 +81,7 @@ public class OpenRecordJob extends QuartzJobBean {
                     calcuOmissionPeak(kuaiCai, 3, 100);
                     calcuOmissionPeak(kuaiCai, 4, 400);
                     createStrategy(kuaiCai, 3, 100);//生成新策略
+                    createStrategy(kuaiCai, 4, 500);//生成新策略
 
                     adjust(kuaiCai);//计算旧策略
 

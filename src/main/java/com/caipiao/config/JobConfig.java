@@ -12,16 +12,21 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JobConfig {
     @Bean
-    public JobDetail teatQuartzDetail(){
-        return JobBuilder.newJob(OpenRecordJob.class).withIdentity("openRecordJob").storeDurably().build();
+    public JobDetail quartzDetail(){
+        return JobBuilder
+                .newJob(OpenRecordJob.class)
+                .withIdentity("openRecordJob")
+                .storeDurably()
+                .build();
     }
 
     @Bean
-    public Trigger testQuartzTrigger(){
+    public Trigger quartzTrigger(){
         SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule()
                 .withIntervalInSeconds(60)  //设置时间周期单位秒
+                .withMisfireHandlingInstructionNextWithRemainingCount()
                 .repeatForever();
-        return TriggerBuilder.newTrigger().forJob(teatQuartzDetail())
+        return TriggerBuilder.newTrigger().forJob(quartzDetail())
                 .withIdentity("openRecordJob")
                 .withSchedule(scheduleBuilder)
                 .build();
